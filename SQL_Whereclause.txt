@@ -1,0 +1,203 @@
+ scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800
+        20
+
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300
+        30
+
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975
+        20
+
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400
+        30
+
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450
+        10
+
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000
+        20
+
+      7839 KING       PRESIDENT            17-NOV-81       5000
+        10
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0
+        30
+
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100
+        20
+
+      7900 JAMES      CLERK           7698 03-DEC-81        950
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7902 FORD       ANALYST         7566 03-DEC-81       3000
+        20
+
+      7934 MILLER     CLERK           7782 23-JAN-82       1300
+        10
+
+
+14 rows selected.
+
+SQL> set lines 100 pages 100
+SQL> select ename from emp;
+
+ENAME
+----------
+SMITH
+ALLEN
+WARD
+JONES
+MARTIN
+BLAKE
+CLARK
+SCOTT
+KING
+TURNER
+ADAMS
+JAMES
+FORD
+MILLER
+
+14 rows selected.
+
+SQL> select ename from emp where sal>300;
+
+ENAME
+----------
+SMITH
+ALLEN
+WARD
+JONES
+MARTIN
+BLAKE
+CLARK
+SCOTT
+KING
+TURNER
+ADAMS
+JAMES
+FORD
+MILLER
+
+14 rows selected.
+
+SQL> select ename,sal from emp where deptno='10';
+
+ENAME             SAL
+---------- ----------
+CLARK            2450
+KING             5000
+MILLER           1300
+
+SQL> select * from emp where sal<'1000';
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+
+SQL> select ename,hiredate from emp where hiredate='09-JUN-1981';
+
+ENAME      HIREDATE
+---------- ---------
+CLARK      09-JUN-81
+
+SQL> select ename from emp where deptno='20';
+
+ENAME
+----------
+SMITH
+JONES
+SCOTT
+ADAMS
+FORD
+
+SQL> select * from emp where hiredate>'01-JAN-1982';
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+SQL> select ename,sal,hiredate from emp where hiredate<'01-JAN-1985';
+
+ENAME             SAL HIREDATE
+---------- ---------- ---------
+SMITH             800 17-DEC-80
+ALLEN            1600 20-FEB-81
+WARD             1250 22-FEB-81
+JONES            2975 02-APR-81
+MARTIN           1250 28-SEP-81
+BLAKE            2850 01-MAY-81
+CLARK            2450 09-JUN-81
+KING             5000 17-NOV-81
+TURNER           1500 08-SEP-81
+JAMES             950 03-DEC-81
+FORD             3000 03-DEC-81
+MILLER           1300 23-JAN-82
+
+12 rows selected.
+
+SQL> select ename,sal,hiredate from emp where hiredate>'31-DEC-1985';
+
+ENAME             SAL HIREDATE
+---------- ---------- ---------
+SCOTT            3000 19-APR-87
+ADAMS            1100 23-MAY-87
+
+SQL> select ename from emp where hiredate='14-FEB-2021';
+
+no rows selected
+
+SQL> select * from emp where ename='Miller'
+  2
+SQL> select * from emp where ename='Miller';
+
+no rows selected
+
+SQL> select * from emp where ename='MILLER';
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+SQL>

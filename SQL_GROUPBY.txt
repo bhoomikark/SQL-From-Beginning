@@ -1,0 +1,192 @@
+ Release 11.2.0.1.0 Production on Wed Aug 13 09:52:26 2025
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> set lines 100 pages 100
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+SQL> select count(*) from emp where job!='PRESIDENT' group by dept;
+select count(*) from emp where job!='PRESIDENT' group by dept
+                                                         *
+ERROR at line 1:
+ORA-00904: "DEPT": invalid identifier
+
+
+SQL> select count(*) from emp where job!='PRESIDENT' group by deptno;
+
+  COUNT(*)
+----------
+         6
+         5
+         2
+
+SQL> select count(*),ename from emp where job!='PRESIDENT' group by deptno;
+select count(*),ename from emp where job!='PRESIDENT' group by deptno
+                *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select count(*),emp.* from emp where job!='PRESIDENT' group by deptno;
+select count(*),emp.* from emp where job!='PRESIDENT' group by deptno
+                    *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select count(*) from emp where job!='PRESIDENT' group by deptno;
+
+  COUNT(*)
+----------
+         6
+         5
+         2
+
+SQL> select sum(sal) from emp group by job;
+
+  SUM(SAL)
+----------
+      4150
+      5600
+      5000
+      8275
+      6000
+
+SQL> select ename,sum(sal) from emp group by job;
+select ename,sum(sal) from emp group by job
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select sum(sal) from emp group by job;
+
+  SUM(SAL)
+----------
+      4150
+      5600
+      5000
+      8275
+      6000
+
+SQL> select count(*) from emp where job='MANAGER' AND GROUPBY DEPt;
+select count(*) from emp where job='MANAGER' AND GROUPBY DEPt
+                                                         *
+ERROR at line 1:
+ORA-00920: invalid relational operator
+
+
+SQL> select count(*) from emp where job='MANAGER' AND GROUPBY DEPTNO;
+select count(*) from emp where job='MANAGER' AND GROUPBY DEPTNO
+                                                         *
+ERROR at line 1:
+ORA-00920: invalid relational operator
+
+
+SQL> select count(*) from emp where job='MANAGER' AND GROUP BY DEPTNO;
+select count(*) from emp where job='MANAGER' AND GROUP BY DEPTNO
+                                                 *
+ERROR at line 1:
+ORA-00936: missing expression
+
+
+SQL> select count(*) from emp where job='MANAGER' group by deptno;
+
+  COUNT(*)
+----------
+         1
+         1
+         1
+
+SQL> select avg(sal) from emp where deptno!=20 group by deptno;
+
+  AVG(SAL)
+----------
+1566.66667
+2916.66667
+
+SQL> select avg(sal) from emp where deptno IS NOT 20 group by deptno;
+select avg(sal) from emp where deptno IS NOT 20 group by deptno
+                                             *
+ERROR at line 1:
+ORA-00908: missing NULL keyword
+
+
+SQL> select avg(sal) from emp where deptno!=20 group by deptno;
+
+  AVG(SAL)
+----------
+1566.66667
+2916.66667
+
+SQL> select count(*) from emp where ename LIKE '%A%' group by job;
+
+  COUNT(*)
+----------
+         3
+         2
+         2
+
+SQL> select count(*), avg(sal) from emp where sal>2000 group by deptno;
+
+  COUNT(*)   AVG(SAL)
+---------- ----------
+         1       2850
+         3 2991.66667
+         2       3725
+
+SQL> select sum(sal), count(*) from emp where job='SALESMEN' group by deptno;
+
+no rows selected
+
+SQL> select count(*),max(sal) from emp group by job;
+
+  COUNT(*)   MAX(SAL)
+---------- ----------
+         4       1300
+         4       1600
+         1       5000
+         3       2975
+         2       3000
+
+SQL> select max(sal) from emp group by deptno;
+
+  MAX(SAL)
+----------
+      2850
+      3000
+      5000
+
+SQL> select count(sal) from emp;
+
+COUNT(SAL)
+----------
+        14
+
+SQL>

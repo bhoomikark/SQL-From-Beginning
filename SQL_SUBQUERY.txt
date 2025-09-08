@@ -1,0 +1,170 @@
+SQL*Plus: Release 11.2.0.1.0 Production on Mon Aug 18 10:22:20 2025
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> set pages 100 lines 100
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+SQL> select ename from emp where sal>2500;
+
+ENAME
+----------
+JONES
+BLAKE
+SCOTT
+KING
+FORD
+
+SQL> select ename from emp where sal< (select sal from emp where ename='MILLER');
+
+ENAME
+----------
+SMITH
+WARD
+MARTIN
+ADAMS
+JAMES
+
+SQL> select ename,deptno from emp where deptno IN (select depno from emp where ename='SMITH');
+select ename,deptno from emp where deptno IN (select depno from emp where ename='SMITH')
+                                                     *
+ERROR at line 1:
+ORA-00904: "DEPNO": invalid identifier
+
+
+SQL> select ename,deptno from emp where deptno IN (select deptno from emp where ename='SMITH');
+
+ENAME          DEPTNO
+---------- ----------
+FORD               20
+ADAMS              20
+SCOTT              20
+JONES              20
+SMITH              20
+
+SQL> select ename,hiredate from emp where hiredate > (select hiredate from emp where ename='JONES');
+
+ENAME      HIREDATE
+---------- ---------
+MARTIN     28-SEP-81
+BLAKE      01-MAY-81
+CLARK      09-JUN-81
+SCOTT      19-APR-87
+KING       17-NOV-81
+TURNER     08-SEP-81
+ADAMS      23-MAY-87
+JAMES      03-DEC-81
+FORD       03-DEC-81
+MILLER     23-JAN-82
+
+10 rows selected.
+
+SQL> select * from emp where job IN (select job from emp where ename='KING');
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+
+SQL> select ename,sal,deptno from emp where sal > 2000 and deptno IN (select deptno from emp where ename='JAMES');
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+BLAKE            2850         30
+
+SQL> select * from emp where sal >1500 and job  In (select job from emp where ename='MILLER');
+
+no rows selected
+
+SQL> select * from emp where sal >(select sal from emp where ename='SMITH') and sal<(select sal from emp where ename='KING');
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+12 rows selected.
+
+SQL> select ename,sal,deptno from emp where comm is not null and deptno=20 and sal>(select sal from emp where ename='SCOTT);
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+
+SQL> select ename,sal,deptno from emp where comm is not null and deptno=20 and sal>(select sal from emp where ename='SCOTT');
+
+no rows selected
+
+SQL> select ename,hiredate from emp where ename like '%S' and hiredate>(select hiredate from emp where ename='JAMES');
+
+ENAME      HIREDATE
+---------- ---------
+ADAMS      23-MAY-87
+
+SQL> select ename from emp where deptno IN (select deptno from emp where ename='JAMES') and sal>(select sal from emp where ename='ADAMS') and job in (select job from emp where ename='MILLER') and hiredate>(select hiredate from emp where ename='MARTIN');
+
+no rows selected
+
+SQL> select * from emp where job='SALESMAN' and deptno=20 and comm>(select comm from emp where ename='SMITH') and hiredate>(select
+
+select ename,hiredate from emp where ename like '%S' and hiredate>(select hiredate from emp where ename='JAMES');
+
+ENAME      HIREDATE
+---------- ---------
+ADAMS      23-MAY-87
+
+SQL> select ename from emp where deptno IN (select deptno from emp where ename='JAMES') and sal>(select sal from emp where ename='ADAMS') and job in (select job from emp where ename='MILLER') and hiredate>(select hiredate from emp where ename='MARTIN');
+
+no rows selected
+
+SQL> select * from emp where job='SALESMAN' and deptno=20 and comm>(select comm from emp where ename='SMITH') and hiredate>(select hiredate from emp where ename='KING');
+
+no rows selected
+
+SQL> select count(*) from emp where sal>(select sal from emp where ename='SMITH');
+
+  COUNT(*)
+----------
+        13
+
+SQL> select ename,sal from emp where sal>(select sal from emp where ename='JONES');
+
+ENAME             SAL
+---------- ----------
+SCOTT            3000
+KING             5000
+FORD             3000

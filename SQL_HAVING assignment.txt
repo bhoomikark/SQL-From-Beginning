@@ -1,0 +1,211 @@
+ Release 11.2.0.1.0 Production on Thu Aug 14 11:31:47 2025
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> set lines 100 pages 100
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+SQL> select job from emp group by job having count(*)=2;
+
+JOB
+---------
+ANALYST
+
+SQL> select job from emp group by job having count(*)>=2;
+
+JOB
+---------
+CLERK
+SALESMAN
+MANAGER
+ANALYST
+
+SQL> select ename from emp group by count(ename);
+select ename from emp group by count(ename)
+                               *
+ERROR at line 1:
+ORA-00934: group function is not allowed here
+
+
+SQL> select ename from emp group by ename having count(ename)=1;
+
+ENAME
+----------
+ALLEN
+JONES
+FORD
+CLARK
+MILLER
+SMITH
+WARD
+MARTIN
+SCOTT
+TURNER
+ADAMS
+BLAKE
+KING
+JAMES
+
+14 rows selected.
+
+SQL> select ename from emp group by ename having count(ename)>1;
+
+no rows selected
+
+SQL> select ename from emp group by ename having count(ename)=2;
+
+no rows selected
+
+SQL> select sal from emp group by sal having count(sal)>1;
+
+       SAL
+----------
+      1250
+      3000
+
+SQL> select count(*) from emp group by dept having ename Like '%A%' OR ename like '%S%';
+select count(*) from emp group by dept having ename Like '%A%' OR ename like '%S%'
+                                  *
+ERROR at line 1:
+ORA-00904: "DEPT": invalid identifier
+
+
+SQL> select count(*) from emp group by deptno having ename Like '%A%' OR ename like '%S%';
+select count(*) from emp group by deptno having ename Like '%A%' OR ename like '%S%'
+                                                                    *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select count(*) from emp group by deptno having count(ename)>=2 and ename Like '%A%' OR ename like '%S%';
+select count(*) from emp group by deptno having count(ename)>=2 and ename Like '%A%' OR ename like '%S%'
+                                                                    *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select count(*) from emp group by deptno having count(ename)>=2 and ename Like '%A%' OR ename like '%S%';
+select count(*) from emp group by deptno having count(ename)>=2 and ename Like '%A%' OR ename like '%S%'
+                                                                    *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select count(*) from emp where  ename Like '%A%' OR ename like '%S%' group by deptno having count(ename)>=2 ;
+
+  COUNT(*)
+----------
+         5
+         4
+
+SQL> select count(*) , ename from emp where  ename Like '%A%' OR ename like '%S%' group by deptno having count(ename)>=2 ;
+select count(*) , ename from emp where  ename Like '%A%' OR ename like '%S%' group by deptno having count(ename)>=2
+                  *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select job,sum(sal) from emp group by job having sum(sal)>3450;
+
+JOB         SUM(SAL)
+--------- ----------
+CLERK           4150
+SALESMAN        5600
+PRESIDENT       5000
+MANAGER         8275
+ANALYST         6000
+
+SQL> select job,sum(sal) from emp group by sal having sal>1500;
+select job,sum(sal) from emp group by sal having sal>1500
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select job,sum(sal) from emp group by job having sal>1500;
+select job,sum(sal) from emp group by job having sal>1500
+                                                 *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select job,sum(sal) from emp where sal>1500;
+select job,sum(sal) from emp where sal>1500
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function
+
+
+SQL> select job,sum(sal) from emp group by sal where sal>1500;
+select job,sum(sal) from emp group by sal where sal>1500
+                                          *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select job,sum(sal) from emp group by job having sum(sal)>1500;
+
+JOB         SUM(SAL)
+--------- ----------
+CLERK           4150
+SALESMAN        5600
+PRESIDENT       5000
+MANAGER         8275
+ANALYST         6000
+
+SQL> select job from emp group by max(sal) having max(sal)>2000;
+select job from emp group by max(sal) having max(sal)>2000
+                             *
+ERROR at line 1:
+ORA-00934: group function is not allowed here
+
+
+SQL> select job, max(sal)  from emp group by sal  having max(sal)>2000;
+select job, max(sal)  from emp group by sal  having max(sal)>2000
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select job from emp group by sal  having max(sal)>2000;
+select job from emp group by sal  having max(sal)>2000
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> select job from emp group by job having max(sal)>2000;
+
+JOB
+---------
+PRESIDENT
+MANAGER
+ANALYST
+
+SQL>

@@ -1,0 +1,284 @@
+Release 11.2.0.1.0 Production on Wed Sep 3 22:37:39 2025
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Enter user-name: scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> select e1.ename,e2.ename from emp where e1.mgr=e2.empno;
+select e1.ename,e2.ename from emp where e1.mgr=e2.empno
+                                               *
+ERROR at line 1:
+ORA-00904: "E2"."EMPNO": invalid identifier
+
+
+SQL> select e1.ename,e2.ename from emp e1.emp e2where e1.mgr=e2.empno;
+select e1.ename,e2.ename from emp e1.emp e2where e1.mgr=e2.empno
+                                    *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select e1.ename,e2.ename from emp e1.emp e2 where e1.mgr=e2.empno;
+select e1.ename,e2.ename from emp e1.emp e2 where e1.mgr=e2.empno
+                                    *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select e1.ename,e2.ename from emp e1,emp e2 where e1.mgr=e2.empno;
+
+ENAME      ENAME
+---------- ----------
+FORD       JONES
+SCOTT      JONES
+TURNER     BLAKE
+ALLEN      BLAKE
+WARD       BLAKE
+JAMES      BLAKE
+MARTIN     BLAKE
+MILLER     CLARK
+ADAMS      SCOTT
+BLAKE      KING
+JONES      KING
+
+ENAME      ENAME
+---------- ----------
+CLARK      KING
+SMITH      FORD
+
+13 rows selected.
+
+SQL> select e1.ename,e1.sal,e2.ename,e2.sal from emp e1,emp e2 where e1.mgr=e2.empno;
+
+ENAME             SAL ENAME             SAL
+---------- ---------- ---------- ----------
+FORD             3000 JONES            2975
+SCOTT            3000 JONES            2975
+TURNER           1500 BLAKE            2850
+ALLEN            1600 BLAKE            2850
+WARD             1250 BLAKE            2850
+JAMES             950 BLAKE            2850
+MARTIN           1250 BLAKE            2850
+MILLER           1300 CLARK            2450
+ADAMS            1100 SCOTT            3000
+BLAKE            2850 KING             5000
+JONES            2975 KING             5000
+
+ENAME             SAL ENAME             SAL
+---------- ---------- ---------- ----------
+CLARK            2450 KING             5000
+SMITH             800 FORD             3000
+
+13 rows selected.
+
+SQL> set lines 100 pages 100
+SQL> select e1.ename,e2.ename,e1.deptno,e2.deptno from emp e1,emp e2 where e1.mgr=e2.empno and e1.job='CLERK';
+
+ENAME      ENAME          DEPTNO     DEPTNO
+---------- ---------- ---------- ----------
+JAMES      BLAKE              30         30
+MILLER     CLARK              10         10
+ADAMS      SCOTT              20         20
+SMITH      FORD               20         20
+
+SQL> select e1.ename,e2.job from emp e1,emp e2 where e1.mgr=e2.empno and e2.job='ANALYST';
+
+ENAME      JOB
+---------- ---------
+ADAMS      ANALYST
+SMITH      ANALYST
+
+SQL> select e1.ename,e2.ename,e1.job,e2.job from emp e1 , emp e2 where e1.job=e2.job
+  2  ;
+
+ENAME      ENAME      JOB       JOB
+---------- ---------- --------- ---------
+MILLER     SMITH      CLERK     CLERK
+JAMES      SMITH      CLERK     CLERK
+ADAMS      SMITH      CLERK     CLERK
+SMITH      SMITH      CLERK     CLERK
+TURNER     ALLEN      SALESMAN  SALESMAN
+MARTIN     ALLEN      SALESMAN  SALESMAN
+WARD       ALLEN      SALESMAN  SALESMAN
+ALLEN      ALLEN      SALESMAN  SALESMAN
+TURNER     WARD       SALESMAN  SALESMAN
+MARTIN     WARD       SALESMAN  SALESMAN
+WARD       WARD       SALESMAN  SALESMAN
+ALLEN      WARD       SALESMAN  SALESMAN
+CLARK      JONES      MANAGER   MANAGER
+BLAKE      JONES      MANAGER   MANAGER
+JONES      JONES      MANAGER   MANAGER
+TURNER     MARTIN     SALESMAN  SALESMAN
+MARTIN     MARTIN     SALESMAN  SALESMAN
+WARD       MARTIN     SALESMAN  SALESMAN
+ALLEN      MARTIN     SALESMAN  SALESMAN
+CLARK      BLAKE      MANAGER   MANAGER
+BLAKE      BLAKE      MANAGER   MANAGER
+JONES      BLAKE      MANAGER   MANAGER
+CLARK      CLARK      MANAGER   MANAGER
+BLAKE      CLARK      MANAGER   MANAGER
+JONES      CLARK      MANAGER   MANAGER
+FORD       SCOTT      ANALYST   ANALYST
+SCOTT      SCOTT      ANALYST   ANALYST
+KING       KING       PRESIDENT PRESIDENT
+TURNER     TURNER     SALESMAN  SALESMAN
+MARTIN     TURNER     SALESMAN  SALESMAN
+WARD       TURNER     SALESMAN  SALESMAN
+ALLEN      TURNER     SALESMAN  SALESMAN
+MILLER     ADAMS      CLERK     CLERK
+JAMES      ADAMS      CLERK     CLERK
+ADAMS      ADAMS      CLERK     CLERK
+SMITH      ADAMS      CLERK     CLERK
+MILLER     JAMES      CLERK     CLERK
+JAMES      JAMES      CLERK     CLERK
+ADAMS      JAMES      CLERK     CLERK
+SMITH      JAMES      CLERK     CLERK
+FORD       FORD       ANALYST   ANALYST
+SCOTT      FORD       ANALYST   ANALYST
+MILLER     MILLER     CLERK     CLERK
+JAMES      MILLER     CLERK     CLERK
+ADAMS      MILLER     CLERK     CLERK
+SMITH      MILLER     CLERK     CLERK
+
+46 rows selected.
+
+SQL> select e1.ename,e1.sal,e2.ename,e2.sal where e1.mgr>e2.empno;
+select e1.ename,e1.sal,e2.ename,e2.sal where e1.mgr>e2.empno
+                                       *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select e1.ename,e1.sal,e2.ename,e2.sal from emp e1.emp e2 where e1.mgr>e2.empno;
+select e1.ename,e1.sal,e2.ename,e2.sal from emp e1.emp e2 where e1.mgr>e2.empno
+                                                  *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select e1.ename,e1.sal,e2.ename,e2.sal from emp e1,emp e2 where e1.mgr>e2.empno;
+
+ENAME             SAL ENAME             SAL
+---------- ---------- ---------- ----------
+FORD             3000 SMITH             800
+SCOTT            3000 SMITH             800
+JAMES             950 SMITH             800
+ALLEN            1600 SMITH             800
+WARD             1250 SMITH             800
+TURNER           1500 SMITH             800
+MARTIN           1250 SMITH             800
+MILLER           1300 SMITH             800
+ADAMS            1100 SMITH             800
+BLAKE            2850 SMITH             800
+JONES            2975 SMITH             800
+CLARK            2450 SMITH             800
+SMITH             800 SMITH             800
+FORD             3000 ALLEN            1600
+SCOTT            3000 ALLEN            1600
+JAMES             950 ALLEN            1600
+ALLEN            1600 ALLEN            1600
+WARD             1250 ALLEN            1600
+TURNER           1500 ALLEN            1600
+MARTIN           1250 ALLEN            1600
+MILLER           1300 ALLEN            1600
+ADAMS            1100 ALLEN            1600
+BLAKE            2850 ALLEN            1600
+JONES            2975 ALLEN            1600
+CLARK            2450 ALLEN            1600
+SMITH             800 ALLEN            1600
+FORD             3000 WARD             1250
+SCOTT            3000 WARD             1250
+JAMES             950 WARD             1250
+ALLEN            1600 WARD             1250
+WARD             1250 WARD             1250
+TURNER           1500 WARD             1250
+MARTIN           1250 WARD             1250
+MILLER           1300 WARD             1250
+ADAMS            1100 WARD             1250
+BLAKE            2850 WARD             1250
+JONES            2975 WARD             1250
+CLARK            2450 WARD             1250
+SMITH             800 WARD             1250
+JAMES             950 JONES            2975
+ALLEN            1600 JONES            2975
+WARD             1250 JONES            2975
+TURNER           1500 JONES            2975
+MARTIN           1250 JONES            2975
+MILLER           1300 JONES            2975
+ADAMS            1100 JONES            2975
+BLAKE            2850 JONES            2975
+JONES            2975 JONES            2975
+CLARK            2450 JONES            2975
+SMITH             800 JONES            2975
+JAMES             950 MARTIN           1250
+ALLEN            1600 MARTIN           1250
+WARD             1250 MARTIN           1250
+TURNER           1500 MARTIN           1250
+MARTIN           1250 MARTIN           1250
+MILLER           1300 MARTIN           1250
+ADAMS            1100 MARTIN           1250
+BLAKE            2850 MARTIN           1250
+JONES            2975 MARTIN           1250
+CLARK            2450 MARTIN           1250
+SMITH             800 MARTIN           1250
+MILLER           1300 BLAKE            2850
+ADAMS            1100 BLAKE            2850
+BLAKE            2850 BLAKE            2850
+JONES            2975 BLAKE            2850
+CLARK            2450 BLAKE            2850
+SMITH             800 BLAKE            2850
+ADAMS            1100 CLARK            2450
+BLAKE            2850 CLARK            2450
+JONES            2975 CLARK            2450
+CLARK            2450 CLARK            2450
+SMITH             800 CLARK            2450
+BLAKE            2850 SCOTT            3000
+JONES            2975 SCOTT            3000
+CLARK            2450 SCOTT            3000
+SMITH             800 SCOTT            3000
+SMITH             800 KING             5000
+SMITH             800 TURNER           1500
+SMITH             800 ADAMS            1100
+SMITH             800 JAMES             950
+
+80 rows selected.
+
+SQL> select e1.ename,e2.ename,e1.job,e2.job from emp e1 , emp e2 where e1.mgr=e2.empno and e1.job=e2.job
+  2  ;
+
+no rows selected
+
+SQL> select e1.ename,e1.sal,e2.ename,e2.sal from emp e1.emp e2 where e1.mgr=e1.empno and  e1.mgr>e2.empno;
+select e1.ename,e1.sal,e2.ename,e2.sal from emp e1.emp e2 where e1.mgr=e1.empno and  e1.mgr>e2.empno
+                                                  *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select e1.ename,e1.sal,e2.ename,e2.sal from emp e1,emp e2 where e1.mgr=e1.empno and  e1.mgr>e2.empno;
+
+no rows selected
+
+SQL> select e1.ename,e2.ename,e2.comm from emp e1, emp e2 where e1.mgr=e2.empno and e2.comm is not nul;
+select e1.ename,e2.ename,e2.comm from emp e1, emp e2 where e1.mgr=e2.empno and e2.comm is not nul
+                                                                                              *
+ERROR at line 1:
+ORA-00908: missing NULL keyword
+
+
+SQL> select e1.ename,e2.ename,e2.comm from emp e1, emp e2 where e1.mgr=e2.empno and e2.comm is not null;
+
+no rows selected
+
+SQL>

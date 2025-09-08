@@ -1,0 +1,224 @@
+set lines 100 pages 100
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+SQL> select * from dept;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+SQL> select min(sal) from emp where sal>(select min(sal) from emp);
+
+  MIN(SAL)
+----------
+       950
+
+SQL> select max(sal) from emp where sal<(select max(sal) from emp where sal <(select max(sal) from emp where sal<(select max(sal) from emp where sal<(select max(sal) from emp))));
+
+  MAX(SAL)
+----------
+      2450
+
+SQL> select ename from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp)));
+
+ENAME
+----------
+JONES
+
+SQL> select empno from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp));
+
+     EMPNO
+----------
+      7788
+      7902
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max (sal) from emp);
+select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max (sal) from emp)
+                                                                                                                    *
+ERROR at line 1:
+ORA-00921: unexpected end of SQL command
+
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max (sal) from emp)))));
+
+DNAME
+--------------
+SALES
+
+SQL> select * from emp where hiredate in (select max(hiredate) from emp where hiredate< (select max(hiredate) from emp));
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+
+SQL> select ename from emp where hiredate in (select min(hiredate) from emp where hiredate > (select min(hiredate) from emp));
+
+ENAME
+----------
+ALLEN
+
+SQL> select * from emp where hiredate in (select min(hiredate) from emp where hiredate> (select min(hiredate) from emp));
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+
+SQL> select * from emp where hiredate in (select max(hiredate) from emp where hiredate< (select max(hiredate) from emp));
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+
+SQL> select ename from emp where hiredate in (select max(hiredate) from emp where hiredate < (select max(hiredate) from emp));
+
+ENAME
+----------
+SCOTT
+
+SQL> select loc from dept where deptno in (select deptno from emp where hiredate in (select min(hiredate) from emp));
+
+LOC
+-------------
+DALLAS
+
+SQL> select * from emp where sal in (select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp )))))));
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp));
+
+DNAME
+--------------
+ACCOUNTING
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp where sal > (select max(sal) from emp)));
+
+no rows selected
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp)));
+
+DNAME
+--------------
+RESEARCH
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select min (sal) from emp where sal > (select min(sal) from emp)));
+
+DNAME
+--------------
+SALES
+
+SQL> select min(sal) from emp where sal > (select min(sal) from emp where sal > (select min(sal) from emp ));
+
+  MIN(SAL)
+----------
+      1100
+
+SQL> select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp) ));
+
+  MAX(SAL)
+----------
+      2850
+**************************************************************************************
+
+SQL>select min(sal) from emp where sal>(select min(sal) from emp);
+
+  MIN(SAL)
+----------
+       950
+
+SQL> select max(sal) from emp where sal<(select max(sal) from emp where sal <(select max(sal) from emp where sal<(select max(sal) from emp where sal<(select max(sal) from emp))));
+
+  MAX(SAL)
+----------
+      2450
+
+SQL> select ename from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp)));
+
+ENAME
+----------
+JONES
+
+SQL> select empno from emp where sal in (select max (sal) from emp where sal < (select max(sal) from emp));
+
+     EMPNO
+----------
+      7788
+      7902
+select * from emp where hiredate in (select min(hiredate) from emp where hiredate> (select min(hiredate) from emp));
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+
+select ename from emp where hiredate in (select max(hiredate) from emp where hiredate < (select max(hiredate) from emp));
+
+ENAME
+----------
+SCOTT
+
+SQL> select loc from dept where deptno in (select deptno from emp where hiredate in (select min(hiredate) from emp));
+
+LOC
+-------------
+DALLAS
+
+SQL> select * from emp where sal in (select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp where sal>(select min(sal) from emp )))))));
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select max (sal) from emp));
+
+DNAME
+--------------
+ACCOUNTING                      
+
+select dname from dept where deptno in (select deptno from emp where sal in (sel\
+ect max (sal) from emp where sal < (select max(sal) from emp)));
+
+DNAME
+--------------
+RESEARCH
+
+SQL> select dname from dept where deptno in (select deptno from emp where sal in (select min (sal) from emp where sal > (select min(sal) from emp)));
+
+DNAME
+--------------
+SALES
+
+SQL> select min(sal) from emp where sal > (select min(sal) from emp where sal > (select min(sal) from emp ));
+
+  MIN(SAL)
+----------
+      1100
+
+SQL> select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp) ));
+
+  MAX(SAL)
+----------
+      2850
