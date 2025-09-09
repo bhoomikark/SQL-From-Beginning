@@ -1,0 +1,102 @@
+Release 11.2.0.1.0 Production on Tue Sep 9 10:05:26 2025
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> set lines 100 pages 100
+SQL> create table Bank(bid number(5) primary key,bname varchar(20),address varchar(20),pincode number(10));
+
+Table created.
+
+SQL> desc Bank;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ BID                                                   NOT NULL NUMBER(5)
+ BNAME                                                          VARCHAR2(20)
+ ADDRESS                                                        VARCHAR2(20)
+ PINCODE                                                        NUMBER(10)
+
+SQL> create table Customer(Cid number(5) primary key,cname varchar(20),c_acc_no number(30),bid number(5) foreign key(bid) references bank(bid));
+create table Customer(Cid number(5) primary key,cname varchar(20),c_acc_no number(30),bid number(5) foreign key(bid) references bank(bid))
+                                                                                                    *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> create table Customer(Cid number(5) primary key,cname varchar(20),c_acc_no number(30),bid number(5) ,foreign key(bid) references bank(bid));
+
+Table created.
+
+SQL> desc customer;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CID                                                   NOT NULL NUMBER(5)
+ CNAME                                                          VARCHAR2(20)
+ C_ACC_NO                                                       NUMBER(30)
+ BID                                                            NUMBER(5)
+
+SQL> create table accounts(aid number(5) primary key,acc_date date,acc_bal number(10,2),bid number(5) ,cid number(5),foreign key(bid) references bank(bid),foreign key(cid) references customer(cid));
+
+Table created.
+
+SQL> desc accounts;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ AID                                                   NOT NULL NUMBER(5)
+ ACC_DATE                                                       DATE
+ ACC_BAL                                                        NUMBER(10,2)
+ BID                                                            NUMBER(5)
+ CID                                                            NUMBER(5)
+
+SQL> create table type(tid number(5) primary key,std_acc varchar(20),savings_acc varchar(20),sal_acc varchar(20),bid number(5) ,cid number(5),aid number(5),foreign key(bid) references bank(bid),foreign key(cid) references customer(cid),foreign key(aid) references accounts(aid));
+
+Table created.
+
+SQL> desc type;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ TID                                                   NOT NULL NUMBER(5)
+ STD_ACC                                                        VARCHAR2(20)
+ SAVINGS_ACC                                                    VARCHAR2(20)
+ SAL_ACC                                                        VARCHAR2(20)
+ BID                                                            NUMBER(5)
+ CID                                                            NUMBER(5)
+ AID                                                            NUMBER(5)
+
+SQL> create table loan(lid number(5) primary key,loan_type varchar(20),loan_amt number(5),loan_interest number(5,2) ,bid number(5),cid number(5),aid number(5),tid number(5),foreign key(bid) references bank(bid),foreign key(cid) references customer(cid),foreign key(aid) references accounts(aid),foreign key(tid) references type(tid));
+
+Table created.
+
+SQL> desc loan;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ LID                                                   NOT NULL NUMBER(5)
+ LOAN_TYPE                                                      VARCHAR2(20)
+ LOAN_AMT                                                       NUMBER(5)
+ LOAN_INTEREST                                                  NUMBER(5,2)
+ BID                                                            NUMBER(5)
+ CID                                                            NUMBER(5)
+ AID                                                            NUMBER(5)
+ TID                                                            NUMBER(5)
+
+SQL> create table waste(wid number(5) primary key,bid number(5),cid number(5),aid number(5),tid number(5),lid number(5), foreign key(bid) references bank(bid),foreign key(cid) references customer(cid),foreign key(aid) references accounts(aid),foreign key(tid) references type(tid),foreign key(lid) references loan(lid));
+
+Table created.
+
+SQL> desc waste;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ WID                                                   NOT NULL NUMBER(5)
+ BID                                                            NUMBER(5)
+ CID                                                            NUMBER(5)
+ AID                                                            NUMBER(5)
+ TID                                                            NUMBER(5)
+ LID                                                            NUMBER(5)
+
+SQL>
