@@ -1,0 +1,146 @@
+ Release 11.2.0.1.0 Production on Wed Sep 10 09:21:56 2025
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> set lines 100 pages 100
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+ACCOUNTS                       TABLE
+BANK                           TABLE
+BONUS                          TABLE
+CUSTOMER                       TABLE
+DEPT                           TABLE
+EMP                            TABLE
+LOAN                           TABLE
+SALGRADE                       TABLE
+TYPE                           TABLE
+WASTE                          TABLE
+
+10 rows selected.
+
+SQL> rename customer to cust;
+
+Table renamed.
+
+SQL> alter table cust add c_ph_no number(5) check(len(c_ph_no));
+alter table cust add c_ph_no number(5) check(len(c_ph_no))
+                                                         *
+ERROR at line 1:
+ORA-00920: invalid relational operator
+
+
+SQL> alter table cust add c_ph_no number(5) check(len(c_ph_no)=10);
+alter table cust add c_ph_no number(5) check(len(c_ph_no)=10)
+                                             *
+ERROR at line 1:
+ORA-00904: "LEN": invalid identifier
+
+
+SQL> alter table cust add c_ph_no number(5) check(length(c_ph_no)=10);
+
+Table altered.
+
+SQL> select * from cust;
+
+no rows selected
+
+SQL> desc cust;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CID                                                   NOT NULL NUMBER(5)
+ CNAME                                                          VARCHAR2(20)
+ C_ACC_NO                                                       NUMBER(30)
+ BID                                                            NUMBER(5)
+ C_PH_NO                                                        NUMBER(5)
+
+SQL> alter table cust rename cname to cust_name;
+alter table cust rename cname to cust_name
+                        *
+ERROR at line 1:
+ORA-14155: missing PARTITION or SUBPARTITION keyword
+
+
+SQL> alter table cust rename column cname to cust_name;
+
+Table altered.
+
+SQL> alter table cust drop column c_ph_no;
+
+Table altered.
+
+SQL> desc cust;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CID                                                   NOT NULL NUMBER(5)
+ CUST_NAME                                                      VARCHAR2(20)
+ C_ACC_NO                                                       NUMBER(30)
+ BID                                                            NUMBER(5)
+
+SQL> alter table cust rename column cust_name to cname;
+
+Table altered.
+
+SQL> desc cust;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CID                                                   NOT NULL NUMBER(5)
+ CNAME                                                          VARCHAR2(20)
+ C_ACC_NO                                                       NUMBER(30)
+ BID                                                            NUMBER(5)
+
+SQL> alter table cust modify cid number(20);
+
+Table altered.
+
+SQL> desc cust;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CID                                                   NOT NULL NUMBER(20)
+ CNAME                                                          VARCHAR2(20)
+ C_ACC_NO                                                       NUMBER(30)
+ BID                                                            NUMBER(5)
+
+SQL> alter table cust modify c_acc_no number(30) is not null;
+alter table cust modify c_acc_no number(30) is not null
+                                            *
+ERROR at line 1:
+ORA-01735: invalid ALTER TABLE option
+
+
+SQL> alter table cust modify c_acc_no number(30)  not null;
+
+Table altered.
+
+SQL> desc cust;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CID                                                   NOT NULL NUMBER(20)
+ CNAME                                                          VARCHAR2(20)
+ C_ACC_NO                                              NOT NULL NUMBER(30)
+ BID                                                            NUMBER(5)
+
+SQL> select constraint_name,constraint_type from user_constraints where table_name=cust;
+select constraint_name,constraint_type from user_constraints where table_name=cust
+                                                                              *
+ERROR at line 1:
+ORA-00904: "CUST": invalid identifier
+
+
+SQL> select constraint_name,constraint_type from user_constraints where table_name='cust';
+
+no rows selected
+
+SQL> select column_name from user_cons_columns where constraint_name='pk_cust';
+
+no rows selected
+
+SQL>
